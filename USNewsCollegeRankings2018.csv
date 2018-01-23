@@ -1,0 +1,312 @@
+University,City,State,Rank,In-state Tuition,Out-state Tuition,Enrollment
+Princeton University,Princeton, NJ,1,$47140,$47140,5400
+Harvard University,Cambridge, MA,2,$48949,$48949,6710
+University of Chicago,Chicago, IL,3  ,$54825,$54825,5941
+Yale University,New Haven, CT,3  ,$51400,$51400,5472
+Columbia University,New York, NY,5  ,$57208,$57208,6113
+Massachusetts Institute of Technology,Cambridge, MA,5  ,$49892,$49892,4524
+Stanford University,Stanford, CA,5  ,$49617,$49617,7034
+University of Pennsylvania,Philadelphia, PA,8,$53534,$53534,10019
+Duke University,Durham, NC,9,$53744,$53744,6609
+California Institute of Technology,Pasadena, CA,10,$49908,$49908,979
+Dartmouth College,Hanover, NH,11  ,$52950,$52950,4310
+Johns Hopkins University,Baltimore, MD,11  ,$52170,$52170,6117
+Northwestern University,Evanston, IL,11  ,$52678,$52678,8353
+Brown University,Providence, RI,14  ,$53419,$53419,6926
+Cornell University,Ithaca, NY,14  ,$52853,$52853,14566
+Rice University,Houston, TX,14  ,$45608,$45608,3893
+Vanderbilt University,Nashville, TN,14  ,$47664,$47664,6871
+University of Notre Dame,Notre Dame, IN,18  ,$51505,$51505,8530
+Washington University in St. Louis,St. Louis, MO,18  ,$51533,$51533,7540
+Georgetown University,Washington, DC,20,$52300,$52300,7453
+Emory University,Atlanta, GA,21  ,$49392,$49392,6861
+University of Southern California,Los Angeles, CA,21  ,$54259,$54259,18794
+Carnegie Mellon University,Pittsburgh, PA,25  ,$53910,$53910,6673
+Wake Forest University,Winston-Salem, NC,27,$51400,$51400,4955
+Tufts University,Medford, MA,29,$54318,$54318,5508
+New York University,New York, NY,30  ,$50464,$50464,26135
+Boston College,Chestnut Hill, MA,32  ,$53346,$53346,9309
+Brandeis University,Waltham, MA,34  ,$53582,$53582,3608
+University of Rochester,Rochester, NY,34  ,$52020,$52020,6386
+Boston University,Boston, MA,37  ,$52082,$52082,17944
+Case Western Reserve University,Cleveland, OH,37  ,$47500,$47500,5152
+Northeastern University,Boston, MA,40  ,$49497,$49497,13473
+Tulane University,New Orleans, LA,40  ,$52960,$52960,6377
+Rensselaer Polytechnic Institute,Troy, NY,42  ,$52305,$52305,6265
+Lehigh University,Bethlehem, PA,46  ,$50740,$50740,5080
+Pepperdine University,Malibu, CA,46  ,$51992,$51992,3542
+University of Miami,Coral Gables, FL,46  ,$48484,$48484,10849
+Villanova University,Villanova, PA,46  ,$51434,$51434,6999
+George Washington University,Washington, DC,56  ,$53518,$53518,11504
+Brigham Young University--Provo,Provo, UT,61  ,$5460,$5460,30979
+Fordham University,New York, NY,61  ,$50601,$50601,9258
+Southern Methodist University,Dallas, TX,61  ,$52498,$52498,6521
+Syracuse University,Syracuse, NY,61  ,$46755,$46755,15218
+Worcester Polytechnic Institute,Worcester, MA,61  ,$48628,$48628,4432
+American University,Washington, DC,69  ,$46615,$46615,7901
+Stevens Institute of Technology,Hoboken, NJ,69  ,$50554,$50554,3021
+Baylor University,Waco, TX,75  ,$43790,$43790,14348
+Texas Christian University,Fort Worth, TX,78  ,$44760,$44760,8891
+Clark University,Worcester, MA,81  ,$44400,$44400,2289
+University of Denver,Denver, CO,87  ,$48669,$48669,5754
+University of Tulsa,Tulsa, OK,87  ,$39502,$39502,3406
+Marquette University,Milwaukee, WI,90  ,$39900,$39900,8238
+University of San Diego,San Diego, CA,90  ,$47708,$47708,5711
+Drexel University,Philadelphia, PA,94  ,$52002,$52002,13251
+Saint Louis University,St. Louis, MO,94  ,$42166,$42166,7454
+Yeshiva University,New York, NY,94  ,$42000,$42000,2714
+Rochester Institute of Technology,Rochester, NY,97  ,$40068,$40068,12410
+Illinois Institute of Technology,Chicago, IL,103  ,$45864,$45864,2944
+Loyola University Chicago,Chicago, IL,103  ,$42828,$42828,11129
+Howard University,Washington, DC,110  ,$25697,$25697,5899
+University of San Francisco,San Francisco, CA,110  ,$46250,$46250,6745
+University of the Pacific,Stockton, CA,110  ,$46346,$46346,3483
+University of St. Thomas,St. Paul, MN,115  ,$41133,$41133,6111
+The Catholic University of America,Washington, DC,120  ,$44060,$44060,3241
+DePaul University,Chicago, IL,120  ,$39010,$39010,15407
+Duquesne University,Pittsburgh, PA,120  ,$36394,$36394,6039
+Clarkson University,Potsdam, NY,124  ,$47950,$47950,3268
+Seton Hall University,South Orange, NJ,124  ,$40588,$40588,5956
+University of Dayton,Dayton, OH,124  ,$41750,$41750,8330
+Hofstra University,Hempstead, NY,132,$43960,$43960,6899
+Mercer University,Macon, GA,133  ,$36000,$36000,4706
+The New School,New York, NY,133  ,$47330,$47330,7014
+St. John Fisher College,Rochester, NY,145  ,$33120,$33120,2786
+Adelphi University,Garden City, NY,151  ,$37170,$37170,5205
+Florida Institute of Technology,Melbourne, FL,151  ,$41240,$41240,3629
+Seattle Pacific University,Seattle, WA,151  ,$40893,$40893,3095
+Biola University,La Mirada, CA,159  ,$38448,$38448,4091
+University of La Verne,La Verne, CA,159  ,$41450,$41450,2809
+Immaculata University,Immaculata, PA,165  ,$27350,$27350,1555
+Maryville University of St. Louis,St Louis, MO,165  ,$28470,$28470,2967
+St. John's University,Queens, NY,165  ,$40790,$40790,16440
+Robert Morris University,Moon Township, PA,176  ,$29420,$29420,4384
+Union University,Jackson, TN,176  ,$31580,$31580,2214
+University of Hartford,West Hartford, CT,176  ,$38910,$38910,5150
+Edgewood College,Madison, WI,181  ,$28500,$28500,1661
+Lesley University,Cambridge, MA,181  ,$26550,$26550,1929
+Lipscomb University,Nashville, TN,181  ,$30932,$30932,2986
+Suffolk University,Boston, MA,181  ,$37270,$37270,5290
+Azusa Pacific University,Azusa, CA,187  ,$36120,$36120,5770
+Pace University,New York, NY,187  ,$44036,$44036,8914
+Andrews University,Berrien Springs, MI,192  ,$28436,$28436,1688
+Widener University,Chester, PA,192  ,$44166,$44166,3591
+Nova Southeastern University,Ft. Lauderdale, FL,198  ,$29940,$29940,4295
+Dallas Baptist University,Dallas, TX,202  ,$27480,$27480,3223
+Ashland University,Ashland, OH,223  ,$20700,$20700,4536
+Benedictine University,Lisle, IL,223  ,$33900,$33900,3171
+Gardner-Webb University,Boiling Springs, NC,223  ,$30740,$30740,2362
+Shenandoah University,Winchester, VA,223  ,$31920,$31920,2099
+American International College,Springfield, MA,Rank Not Published,$33140,$33140,1424
+Barry University,Miami Shores, FL,Rank Not Published,$29700,$29700,3541
+Cardinal Stritch University,Milwaukee, WI,Rank Not Published,$28844,$28844,1534
+Clark Atlanta University,Atlanta, GA,Rank Not Published,$23082,$23082,3093
+Grand Canyon University 1,Phoenix, AZ,Rank Not Published,$17050,$17050,N/A
+Liberty University,Lynchburg, VA,Rank Not Published,$24304,$24304,47050
+Lindenwood University,St. Charles, MO,Rank Not Published,$16960,$16960,7549
+National Louis University 1,Chicago, IL,Rank Not Published,$10380,$10380,N/A
+Regent University,Virginia Beach, VA,Rank Not Published,$17450,$17450,3806
+Spalding University 1,Louisville, KY,Rank Not Published,$24388,$24388,N/A
+Trevecca Nazarene University,Nashville, TN,Rank Not Published,$25100,$25100,2092
+Trinity International University,Deerfield, IL,Rank Not Published,$30750,$30750,1076
+University of the Cumberlands,Williamsburg, KY,Rank Not Published,$23000,$23000,3082
+Alliant International University,San Diego, CA,Unranked,$17510,$17510,1264
+Argosy University 1,Orange, CA,Unranked,$13152,$13152,N/A
+California Institute of Integral Studies 1,San Francisco, CA,Unranked,$28467,$28467,N/A
+Capella University 1,Minneapolis, MN,Unranked,$13998,$13998,N/A
+Northcentral University,San Diego, AZ,Unranked,$10368,$10368,133
+Trident University International 1,Cypress, CA,Unranked,$9000,$9000,N/A
+Union Institute and University 1,Cincinnati, OH,Unranked,$12416,$12416,N/A
+University of Phoenix 1,Phoenix, AZ,Unranked,$9690,$9690,N/A
+Walden University 1,Minneapolis, MN,Unranked,$12075,$12075,N/A
+Wilmington University,New Castle, DE,Unranked,$10940,$10940,8873
+University of California--Berkeley,Berkeley, CA,21  ,$42112 , $14098 ,29311
+University of California--Los Angeles,Los Angeles, CA,21  ,$41270 , $13256 ,30873
+University of Virginia,Charlottesville, VA,25  ,$46975 , $16146 ,16331
+University of Michigan--Ann Arbor,Ann Arbor, MI,28,$47476 , $14826 ,28983
+University of North Carolina--Chapel Hill,Chapel Hill, NC,30  ,$34588 , $9005 ,18523
+College of William & Mary,Williamsburg, VA,32  ,$43099 , $20287 ,6276
+Georgia Institute of Technology,Atlanta, GA,34  ,$33014 , $12418 ,15489
+University of California--Santa Barbara,Santa Barbara, CA,37  ,$42423 , $14409 ,21574
+University of California--Irvine,Irvine, CA,42  ,$43530 , $15516 ,27331
+University of California--San Diego,La Jolla, CA,42  ,$44197 , $16183 ,28127
+University of Florida,Gainesville, FL,42  ,$28658 , $6381 ,34554
+University of California--Davis,Davis, CA,46  ,$42396 , $14382 ,29546
+University of Wisconsin--Madison,Madison, WI,46  ,$34782 , $10533 ,31710
+Pennsylvania State University--University Park,University Park, PA,52  ,$33664 , $18436 ,41359
+University of Illinois--Urbana-Champaign,Champaign, IL,52  ,$31988 , $15868 ,33932
+Ohio State University--Columbus,Columbus, OH,54  ,$29659 , $10591 ,45831
+University of Georgia,Athens, GA,54  ,$30392 , $11818 ,27951
+Purdue University--West Lafayette,West Lafayette, IN,56  ,$28804 , $10002 ,30043
+University of Connecticut,Storrs, CT,56  ,$36948 , $14880 ,19324
+University of Texas--Austin,Austin, TX,56  ,$35766 , $10136 ,40168
+University of Washington,Seattle, WA,56  ,$35538 , $10974 ,30933
+University of Maryland--College Park,College Park, MD,61  ,$33606 , $10399 ,28472
+Clemson University,Clemson, SC,67,$35654 , $14712 ,18599
+University of Pittsburgh,Pittsburgh, PA,68,$30642 , $19080 ,19123
+Rutgers University--New Brunswick,Piscataway, NJ,69  ,$30023 , $14372 ,36168
+Texas A&M University--College Station,College Station, TX,69  ,$30208 , $10030 ,50735
+University of Minnesota--Twin Cities,Minneapolis, MN,69  ,$26603 , $14417 ,34871
+Virginia Tech,Blacksburg, VA,69  ,$29371 , $12852 ,25791
+Colorado School of Mines,Golden, CO,75  ,$37436 , $18386 ,4612
+University of Massachusetts--Amherst,Amherst, MA,75  ,$33662 , $15596 ,23373
+Miami University--Oxford,Oxford, OH,78  ,$32768 , $14578 ,16981
+University of Iowa,Iowa City, IA,78  ,$28813 , $8575 ,24476
+Florida State University,Tallahassee, FL,81  ,$21673 , $6507 ,32929
+Michigan State University,East Lansing, MI,81  ,$39405 , $14460 ,39090
+North Carolina State University--Raleigh,Raleigh, NC,81  ,$27406 , $9058 ,23847
+University of California--Santa Cruz,Santa Cruz, CA,81  ,$42042 , $14028 ,16962
+University of Delaware,Newark, DE,81  ,$32250 , $12830 ,18374
+Binghamton University--SUNY,Binghamton, NY,87  ,$24403 , $9523 ,13632
+Indiana University--Bloomington,Bloomington, IN,90  ,$34845 , $10533 ,39184
+University of Colorado--Boulder,Boulder, CO,90  ,$35079 , $11531 ,27846
+Stony Brook University--SUNY,Stony Brook, NY,97  ,$26297 , $9257 ,17026
+SUNY College of Environmental Science and Forestry,Syracuse, NY,97  ,$18090 , $8240 ,1755
+University at Buffalo--SUNY,Buffalo, NY,97  ,$26270 , $9770 ,20411
+University of Oklahoma,Norman, OK,97  ,$24443 , $9062 ,22436
+University of Vermont,Burlington, VT,97  ,$41356 , $17740 ,11159
+Auburn University,Auburn, AL,103  ,$29640 , $10968 ,22658
+University of New Hampshire,Durham, NH,103  ,$32637 , $18067 ,12871
+University of Oregon,Eugene, OR,103  ,$34611 , $11571 ,20049
+University of South Carolina,Columbia, SC,103  ,$32362 , $12262 ,25556
+University of Tennessee,Knoxville, TN,103  ,$31160 , $12970 ,22139
+University of Alabama,Tuscaloosa, AL,110  ,$28100 , $10780 ,32563
+University of Utah,Salt Lake City, UT,110  ,$26408 , $9166 ,23789
+Arizona State University--Tempe,Tempe, AZ,115  ,$27372 , $10792 ,42477
+Iowa State University,Ames, IA,115  ,$22256 , $8420 ,30671
+Temple University,Philadelphia, PA,115  ,$27266 , $16274 ,29275
+University of Kansas,Lawrence, KS,115  ,$26592 , $10824 ,19262
+University of Missouri,Columbia, MO,120  ,$26506 , $9817 ,25898
+Colorado State University,Fort Collins, CO,124  ,$29140 , $11632 ,25177
+Michigan Technological University,Houghton, MI,124  ,$32318 , $15074 ,5829
+University of Arizona,Tucson, AZ,124  ,$32449 , $11644 ,34072
+University of California--Riverside,Riverside, CA,124  ,$41931 , $13917 ,19799
+University of Nebraska--Lincoln,Lincoln, NE,124  ,$23256 , $8690 ,20833
+Louisiana State University--Baton Rouge,Baton Rouge, LA,133  ,$28051 , $11374 ,26118
+Rutgers University--Newark,Newark, NJ,133  ,$29480 , $13829 ,8170
+University of Arkansas,Fayetteville, AR,133  ,$24308 , $9062 ,22548
+University of Cincinnati,Cincinnati, OH,133  ,$26334 , $11000 ,25860
+University of Kentucky,Lexington, KY,133  ,$28046 , $11922 ,22621
+George Mason University,Fairfax, VA,140  ,$34370 , $11924 ,23812
+New Jersey Institute of Technology,Newark, NJ,140  ,$31034 , $16430 ,8211
+San Diego State University,San Diego, CA,140  ,$19340 , $7460 ,29853
+University of South Florida,Tampa, FL,140  ,$17324 , $6410 ,31461
+Washington State University,Pullman, WA,140  ,$25817 , $11391 ,24904
+Kansas State University,Manhattan, KS,145  ,$24775 , $9874 ,19472
+Oregon State University,Corvallis, OR,145  ,$29457 , $10797 ,25327
+University of Illinois--Chicago,Chicago, IL,145  ,$27672 , $14816 ,17959
+University of Mississippi,University, MS,145  ,$23554 , $8290 ,19213
+University of Texas--Dallas,Richardson, TX,145  ,$33654 , $12162 ,17350
+Ohio University,Athens, OH,151  ,$21360 , $11896 ,23788
+University at Albany--SUNY,Albany, NY,151  ,$24358 , $9278 ,13139
+Oklahoma State University,Stillwater, OK,156  ,$23776 , $8738 ,21093
+University of Massachusetts--Lowell,Lowell, MA,156  ,$31865 , $14800 ,13639
+University of Rhode Island,Kingston, RI,156  ,$28874 , $12884 ,14801
+Illinois State University,Normal, IL,159  ,$25168 , $14061 ,18643
+University of Alabama--Birmingham,Birmingham, AL,159  ,$23790 , $10410 ,12369
+University of Hawaii--Manoa,Honolulu, HI,159  ,$33764 , $11732 ,13132
+University of Maryland--Baltimore County,Baltimore, MD,159  ,$25654 , $11518 ,11142
+Missouri University of Science & Technology,Rolla, MO,165  ,$27701 , $9628 ,6909
+University of California--Merced,Merced, CA,165  ,$41612 , $13598 ,6815
+University of Louisville,Louisville, KY,165  ,$26286 , $11264 ,15827
+Mississippi State University,Mississippi State, MS,171  ,$22358 , $8138 ,18090
+Rowan University,Glassboro, NJ,171  ,$21378 , $13108 ,14344
+University of Central Florida,Orlando, FL,171  ,$22467 , $6368 ,55776
+University of Idaho,Moscow, ID,171  ,$23812 , $7488 ,9586
+Virginia Commonwealth University,Richmond, VA,171  ,$32942 , $13570 ,24212
+Kent State University,Kent, OH,176  ,$18376 , $10012 ,23684
+Texas Tech University,Lubbock, TX,176  ,$23011 , $10771 ,29963
+University of Maine,Orono, ME,181  ,$30282 , $10902 ,9323
+University of Wyoming,Laramie, WY,181  ,$16827 , $5217 ,9788
+Ball State University,Muncie, IN,187  ,$25938 , $9848 ,17011
+Montclair State University,Montclair, NJ,187  ,$20566 , $12454 ,16810
+West Virginia University,Morgantown, WV,187  ,$23616 , $8376 ,22350
+Indiana University-Purdue University--Indianapolis,Indianapolis, IN,192  ,$29806 , $9334 ,21748
+University of Houston,Houston, TX,192  ,$27337 , $11887 ,35871
+University of New Mexico,Albuquerque, NM,192  ,$22412 , $7150 ,20215
+University of North Dakota,Grand Forks, ND,192  ,$21462 , $9862 ,11255
+New Mexico State University,Las Cruces, NM,198  ,$22701 , $7122 ,12027
+North Dakota State University,Fargo, ND,198  ,$20571 , $9409 ,12010
+University of North Carolina--Charlotte,Charlotte, NC,198  ,$20268 , $6834 ,23404
+Bowling Green State University,Bowling Green, OH,202  ,$18593 , $11057 ,14852
+California State University--Fullerton,Fullerton, CA,202  ,$17460 , $6850 ,34576
+University of Massachusetts--Boston,Boston, MA,202  ,$32985 , $13828 ,12847
+University of Nevada--Reno,Reno, NV,202  ,$21787 , $7599 ,18191
+Central Michigan University,Mount Pleasant, MI,207  ,$23670 , $12510 ,19923
+East Carolina University,Greenville, NC,207  ,$23420 , $7143 ,22969
+Florida A&M University,Tallahassee, FL,207  ,$17725 , $5785 ,7769
+Montana State University,Bozeman, MT,207  ,$23042 , $7031 ,14400
+University of Alaska--Fairbanks,Fairbanks, AK,207  ,$23534 , $8144 ,7239
+University of Colorado--Denver,Denver, CO,207  ,$31209 , $11019 ,14622
+University of Massachusetts--Dartmouth,North Dartmouth, MA,207  ,$28285 , $13571 ,6999
+University of Montana,Missoula, MT,207  ,$24943 , $7063 ,10077
+Western Michigan University,Kalamazoo, MI,207  ,$14699 , $11943 ,18313
+Florida International University,Miami, FL,216  ,$18956 , $6558 ,45813
+Louisiana Tech University,Ruston, LA,216  ,$18438 , $9525 ,11281
+South Dakota State University,Brookings, SD,216  ,$11403 , $8172 ,10959
+Southern Illinois University--Carbondale,Carbondale, IL,216  ,$13936 , $13936 ,12182
+University of Alabama--Huntsville,Huntsville, AL,216  ,$21480 , $10280 ,6507
+University of Missouri--Kansas City,Kansas City, MO,216  ,$25999 , $9734 ,11708
+Utah State University,Logan, UT,216  ,$20726 , $7174 ,24838
+California State University--Fresno,Fresno, CA,223  ,$17929 , $6583 ,21528
+Georgia State University,Atlanta, GA,223  ,$29432 , $10858 ,25455
+University of South Dakota,Vermillion, SD,223  ,$11688 , $8457 ,7500
+Wayne State University,Detroit, MI,223  ,$28590 , $13278 ,17280
+Augusta University,Augusta, GA,Rank Not Published,$23606 , $8634 ,5133
+Boise State University,Boise, ID,Rank Not Published,$22642 , $7326 ,20209
+Cleveland State University,Cleveland, OH,Rank Not Published,$13848 , $9796 ,12433
+Eastern Michigan University,Ypsilanti, MI,Rank Not Published,$11530 , $11530 ,17541
+East Tennessee State University,Johnson City, TN,Rank Not Published,$26463 , $8679 ,11065
+Florida Atlantic University,Boca Raton, FL,Rank Not Published,$21595 , $6039 ,25402
+Georgia Southern University,Statesboro, GA,Rank Not Published,$18692 , $6796 ,18005
+Indiana State University,Terre Haute, IN,Rank Not Published,$19454 , $8916 ,11202
+Indiana University of Pennsylvania,Indiana, PA,Rank Not Published,$15882 , $12146 ,10618
+Jackson State University,Jackson, MS,Rank Not Published,$17614 , $7261 ,7492
+Kennesaw State University,Kennesaw, GA,Rank Not Published,$21158 , $7432 ,32166
+Lamar University,Beaumont, TX,Rank Not Published,$22561 , $10111 ,9326
+Middle Tennessee State University,Murfreesboro, TN,Rank Not Published,$27578 , $8948 ,19693
+Morgan State University,Baltimore, MD,Rank Not Published,$17833 , $7767 ,6362
+North Carolina A&T State University,Greensboro, NC,Rank Not Published,$19416 , $6526 ,9668
+Northern Arizona University,Flagstaff, AZ,Rank Not Published,$24841 , $11059 ,26506
+Northern Illinois University,DeKalb, IL,Rank Not Published,$23817 , $14352 ,14079
+Oakland University,Rochester, MI,Rank Not Published,$24735 , $13406 ,16568
+Old Dominion University,Norfolk, VA,Rank Not Published,$28200 , $10350 ,19793
+Portland State University,Portland, OR,Rank Not Published,$21180 , $7302 ,21633
+Prairie View A&M University,Prairie View, TX,Rank Not Published,$10059 , $10059 ,7455
+Sam Houston State University,Huntsville, TX,Rank Not Published,$22340 , $9890 ,17902
+San Francisco State University,San Francisco, CA,Rank Not Published,$19134 , $7254 ,25945
+Tennessee State University,Nashville, TN,Rank Not Published,$20178 , $7458 ,7007
+Tennessee Technological University,Cookeville, TN,Rank Not Published,$26190 , N/A 9,437
+Texas A&M University--Commerce,Commerce, TX,Rank Not Published,$20884 , $8434 ,7605
+Texas A&M University--Corpus Christi,Corpus Christi, TX,Rank Not Published,$26061 , $12944 ,10212
+Texas A&M University--Kingsville,Kingsville, TX,Rank Not Published,$20912 , $8462 ,6811
+Texas Southern University,Houston, TX,Rank Not Published,$21240 , $9000 ,6562
+Texas State University,San Marcos, TX,Rank Not Published,$23071 , $10621 ,34244
+Texas Woman's University,Denton, TX,Rank Not Published,$21816 , $9366 ,10408
+University of Akron,Akron, OH,Rank Not Published,$21863 , $13332 ,17416
+University of Arkansas--Little Rock,Little Rock, AR,Rank Not Published,$19797 , $8401 ,9374
+University of Louisiana--Lafayette,Lafayette, LA,Rank Not Published,$23074 , $9346 ,15998
+University of Louisiana--Monroe,Monroe, LA,Rank Not Published,$20381 , $8281 ,7778
+University of Maryland--Eastern Shore,Princess Anne, MD,Rank Not Published,$18048 , $8042 ,3278
+University of Memphis,Memphis, TN,Rank Not Published,$21413 , $9701 ,17176
+University of Missouri--St. Louis,St. Louis, MO,Rank Not Published,$27327 , $10275 ,13923
+University of Nebraska--Omaha,Omaha, NE,Rank Not Published,$22035 , $8205 ,12536
+University of Nevada--Las Vegas,Las Vegas, NV,Rank Not Published,$21498 , $7310 ,24714
+University of New Orleans,New Orleans, LA,Rank Not Published,$13530 , $8694 ,6442
+University of North Carolina--Greensboro,Greensboro, NC,Rank Not Published,$22410 , $7164 ,16281
+University of Northern Colorado,Greeley, CO,Rank Not Published,$20474 , $8888 ,9503
+University of North Texas,Denton, TX,Rank Not Published,$23716 , $10906 ,31209
+University of South Alabama,Mobile, AL,Rank Not Published,$19586 , $10005 ,11761
+University of Southern Mississippi,Hattiesburg, MS,Rank Not Published,$9854 , $7854 ,11779
+University of Texas--Arlington,Arlington, TX,Rank Not Published,$25152 , $9952 ,32775
+University of Texas--El Paso,El Paso, TX,Rank Not Published,$21396 , $7651 ,20521
+University of Texas--Rio Grande Valley,Edinburg, TX,Rank Not Published,$17230 , $7438 ,24433
+University of Texas--San Antonio,San Antonio, TX,Rank Not Published,$23379 , $9380 ,24724
+University of Toledo,Toledo, OH,Rank Not Published,$18578 , $9240 ,16247
+University of West Florida,Pensacola, FL,Rank Not Published,$18628 , $6360 ,10082
+University of West Georgia,Carrollton, GA,Rank Not Published,$20406 , $7188 ,11155
+University of Wisconsin--Milwaukee,Milwaukee, WI,Rank Not Published,$19851 , $9493 ,21375
+Valdosta State University,Valdosta, GA,Rank Not Published,$17196 , $6410 ,8780
+Wichita State University,Wichita, KS,Rank Not Published,$17270 , $8312 ,11823
+Wright State University,Dayton, OH,Rank Not Published,$17350 , $8730 ,12504
+Idaho State University 1,Pocatello, ID,Unranked,$21023 , $6956 ,N/A
