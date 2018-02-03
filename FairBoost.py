@@ -28,16 +28,16 @@ from sklearn.base import ClassifierMixin, RegressorMixin, is_regressor, is_class
 from sklearn.externals import six
 from sklearn.externals.six.moves import zip
 from sklearn.externals.six.moves import xrange as range
-from sklearn.ensemble.forest import BaseForest
+from sklearn.ensemble import *
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
 from sklearn.tree.tree import BaseDecisionTree
 from sklearn.tree._tree import DTYPE
 from sklearn.utils import check_array, check_X_y, check_random_state
 from sklearn.utils import extmath
-from sklearn.metrics import accuracy_score, r2_score
+from sklearn.metrics import accuracy_score, r2_score, mean_squared_error
 from sklearn.utils.validation import has_fit_parameter, check_is_fitted
 
-class AdaBoostRegressorCK(BaseWeightBoostingCK, RegressorMixin):
+class FairBoostRegressor(weight_boosting.BaseWeightBoosting, RegressorMixin):
     """An AdaBoost regressor.
     An AdaBoost [1] regressor is a meta-estimator that begins by fitting a
     regressor on the original dataset and then fits additional copies of the
@@ -95,11 +95,10 @@ class AdaBoostRegressorCK(BaseWeightBoostingCK, RegressorMixin):
                  n_estimators=50,
                  learning_rate=1.,
                  loss='linear',
-                 random_state=None,
-                 g1=[],
-                 g2=[]):
+                 random_state=None):
+        
 
-        super(AdaBoostRegressorCK, self).__init__(
+        super(FairBoostRegressor, self).__init__(
             base_estimator=base_estimator,
             n_estimators=n_estimators,
             learning_rate=learning_rate,
@@ -108,6 +107,9 @@ class AdaBoostRegressorCK(BaseWeightBoostingCK, RegressorMixin):
         self.loss = loss
         self.random_state = random_state
         
+    def setGroups(self, g):
+        self.g0 = [i for i,x in enumerate(g) if x==0]
+        self.g1 = [i for i,x in enumerate(g) if x==1]
 
     def fit(self, X, y, sample_weight=None):
         """Build a boosted regressor from the training set (X, y).
@@ -132,148 +134,95 @@ class AdaBoostRegressorCK(BaseWeightBoostingCK, RegressorMixin):
                 "loss must be 'linear', 'square', or 'exponential'")
 
         # Fit
-        return super(AdaBoostRegressorCK, self).fit(X, y, sample_weight)
+        return super(FairBoostRegressor, self).fit(X, y)
 
     def _validate_estimator(self):
         """Check the estimator and set the base_estimator_ attribute."""
-        super(AdaBoostRegressorCK, self)._validate_estimator(
+        super(FairBoostRegressor, self)._validate_estimator(
             default=DecisionTreeRegressor(max_depth=3))
         
-#################### Helpers ###################################
-def stable_cumsum(arr, axis=None, rtol=1e-05, atol=1e-08):
-    """Use high precision for cumsum and check that final value matches sum
-    Parameters
-    ----------
-    arr : array-like
-        To be cumulatively summed as flat
-    axis : int, optional
-        Axis along which the cumulative sum is computed.
-        The default (None) is to compute the cumsum over the flattened array.
-    rtol : float
-        Relative tolerance, see ``np.allclose``
-    atol : float
-        Absolute tolerance, see ``np.allclose``
-    """
 
-    out = np.cumsum(arr, axis=axis, dtype=np.float64)
-    expected = np.sum(arr, axis=axis, dtype=np.float64)
-    if not np.all(np.isclose(out.take(-1, axis=axis), expected, rtol=rtol,
-                             atol=atol, equal_nan=True)):
-        warnings.warn('cumsum was found to be unstable: '
-                      'its last element does not correspond to sum',
-                      RuntimeWarning)
-    return out
-
-    def recomputeBins(y_predict, g0, g1, nbins):
+    def recomputeBins(self, y_predict, g0, g1, nbins):
         #g0 has indexes of objects in X
         # get indexes of sorted predictions for group
         sorted0 = np.argsort([y_predict[x] for x in g0])
-        binSize=np.ceil(float(len(g0))/nbins)
+        binSize=int(np.ceil(float(len(g0))/nbins))
         bins0=[]
         b=[]
         i=0
         j=binSize-1
         for n in range(nbins):
-            bins0.append([g0[x] for x in sorted0[i:min(j,len(sorted0)-1)]])
+            k=int(min(j,len(sorted0)-1))
+            bins0.append([g0[x] for x in sorted0[i:k]])
             i+=binSize
             j+=binSize
            
         #g1 has indexes of objects in X
         # get indexes of sorted predictions for group
         sorted1 = np.argsort([y_predict[x] for x in g1])
-        binSize=np.ceil(float(len(g1))/nbins)
+        binSize=int(np.ceil(float(len(g1))/nbins))
         bins1=[]
         b=[]
         i=0
         j=binSize-1
         for n in range(nbins):
-            bins1.append([g1[x] for x in sorted1[i:min(j,len(sorted1)-1)]])
+            k=int(min(j,len(sorted0)-1))
+            bins1.append([g1[x] for x in sorted1[i:k]])
             i+=binSize
             j+=binSize
         return bins0,bins1
         
-#########################################################################################
-def _boost(self, iboost, X, y, sample_weight, random_state):
-        """Implement a single boost for regression
-        Perform a single boost according to the AdaBoost.R2 algorithm and
-        return the updated sample weights.
+    #########################################################################################
+    def _boost(self, iboost, X, y, sample_weight, random_state):
+        """Perform a single boost according to the AdaBoost.R2 algorithm and return the updated sample weights.
         Parameters
         ----------
         iboost : int
-            The index of the current boost iteration.
+        The index of the current boost iteration.
         X : {array-like, sparse matrix} of shape = [n_samples, n_features]
-            The training input samples. Sparse matrix can be CSC, CSR, COO,
-            DOK, or LIL. DOK and LIL are converted to CSR.
+        The training input samples. Sparse matrix can be CSC, CSR, COO,
+        DOK, or LIL. DOK and LIL are converted to CSR.
         y : array-like of shape = [n_samples]
-            The target values (class labels in classification, real numbers in
-            regression).
+        The target values (class labels in classification, real numbers in
+        regression).
         sample_weight : array-like of shape = [n_samples]
-            The current sample weights.
+        The current sample weights.
         random_state : numpy.RandomState
-            The current random number generator
+        The current random number generator
         Returns
         -------
         sample_weight : array-like of shape = [n_samples] or None
-            The reweighted sample weights.
-            If None then boosting has terminated early.
+        The reweighted sample weights.
+        If None then boosting has terminated early.
         estimator_weight : float
-            The weight for the current boost.
-            If None then boosting has terminated early.
+        The weight for the current boost.
+        If None then boosting has terminated early.
         estimator_error : float
-            The regression error for the current boost.
-            If None then boosting has terminated early.
+        The regression error for the current boost.
+        If None then boosting has terminated early.
         """
         estimator = self._make_estimator(random_state=random_state)
-        
+
         # Weighted sampling of the training set with replacement
         # For NumPy >= 1.7.0 use np.random.choice
-        cdf = stable_cumsum(sample_weight)
+        
+        cdf = np.cumsum(sample_weight, axis=None, dtype=np.float64)
+        
         cdf /= cdf[-1]
         uniform_samples = random_state.random_sample(X.shape[0])
         bootstrap_idx = cdf.searchsorted(uniform_samples, side='right')
         # searchsorted returns a scalar
         bootstrap_idx = np.array(bootstrap_idx, copy=False)
-
-        print "start boosting!"
-        print
+        
+        #print()
         # Fit on the bootstrapped sample and obtain a prediction
         # for all samples in the training set
         estimator.fit(X[bootstrap_idx], y[bootstrap_idx])
         y_predict = estimator.predict(X)
-        print "Iteration" + str(iboost) + str(mean_squared_error(y, y_predict))
-
-###########  REPLACE ERROR VECT WITH OUR OWN   ########
-#         error_vect = np.abs(y_predict - y)
-    
-################ compute bin-wise group error #####################
-
-        nbins=10
-        bins0,bins1  = recomputeBins(y_predict, g0, g1, nbins)
-        # sum the error for items in bin for each group
-        e0=[np.sum([error_vect[i] for i in b]) for b in bins0]
-        e1=[np.sum([error_vect[i] for i in b]) for b in bins1]
-
-        bin_error = np.subtract(e0, e1)
-        print "errors: ", bin_error
-        ################# Update weights based on binned error ############
-
-        # weight proportional to difference between the error in each group in the bin. 
-        # but could be based off of the individual error for each term
-        # or some combination
-        for i,e in enumerate(bin_error):
-            if e < 0:
-                for x in bins0[i]:
-                    error_vect[x]=bin_error[i]
-                for x in bins1[i]:
-                    error_vect[x]=0
-            else:
-                for x in bins1[i]:
-                    error_vect[x]=bin_error[i]
-                for x in bins0[i]:
-                    error_vect[x]=0
-                    
-################ continue #########################################
-
+        #print ("Iteration " + str(iboost) + ": "+str(mean_squared_error(y, y_predict)))
+        
+        error_vect = np.abs(y_predict - y)
+        
         error_max = error_vect.max()
 
         if error_max != 0.:
@@ -284,20 +233,59 @@ def _boost(self, iboost, X, y, sample_weight, random_state):
         elif self.loss == 'exponential':
             error_vect = 1. - np.exp(- error_vect)
 
+        ###########  REPLACE ERROR VECT WITH OUR OWN   ########
+        #         error_vect = np.abs(y_predict - y)
+        
+        ################ compute bin-wise group error #####################
+        #print("before")
+        #print(error_vect)
+        nbins=10
+        bins0,bins1  = self.recomputeBins(y_predict, self.g0, self.g1, nbins)
+        # sum the error for items in bin for each group
+        e0=[np.sum([error_vect[i] for i in b]) for b in bins0]
+        e1=[np.sum([error_vect[i] for i in b]) for b in bins1]
+    
+        bin_error = np.subtract(e0, e1)
+        fair_error = np.mean(np.abs(bin_error))
+        #print ("errors: ", fair_error)
+        ################# Update weights based on binned error ############
+
+        # weight proportional to difference between the error in each group in the bin. 
+        # but could be based off of the individual error for each term
+        # or some combination
+        for i,e in enumerate(bin_error):
+            if e < 0:
+                for x in bins0[i]:
+                   error_vect[x]=np.abs(bin_error[i])
+                for x in bins1[i]:
+                    error_vect[x]=0
+            else:
+                for x in bins1[i]:
+                    error_vect[x]=np.abs(bin_error[i])
+                for x in bins0[i]:
+                    error_vect[x]=0
+
+    ################ continue #########################################
+        
+        #print("after")
+        #print(error_vect)
         # Calculate the average loss
         estimator_error = (sample_weight * error_vect).sum()
-        
-        if estimator_error <= 0:
+
+        #if estimator_error <= 0:
+        if fair_error <= 0:
             # Stop if fit is perfect
+            #print("Fit is perfect!")
             return sample_weight, 1., 0.
 
-        elif estimator_error >= 0.5:
+        #elif estimator_error >= 0.5:
+        elif fair_error >= 10:
             # Discard current estimator only if it isn't the only one
+            #print("error too high!")
             if len(self.estimators_) > 1:
                 self.estimators_.pop(-1)
             return None, None, None
-        
-
+            
         beta = estimator_error / (1. - estimator_error)
 
         # Boost weight using AdaBoost.R2 alg
@@ -310,64 +298,65 @@ def _boost(self, iboost, X, y, sample_weight, random_state):
 
         return sample_weight, estimator_weight, estimator_error
     
-#########################################################################################
+    #########################################################################################
 
-        def _get_median_predict(self, X, limit):
-            # Evaluate predictions of all estimators
-            predictions = np.array([
-                est.predict(X) for est in self.estimators_[:limit]]).T
+    def _get_median_predict(self, X, limit):
+        # Evaluate predictions of all estimators
+        predictions = np.array([
+            est.predict(X) for est in self.estimators_[:limit]]).T
+        
+        # Sort the predictions
+        sorted_idx = np.argsort(predictions, axis=1)
+        
+        # Find index of median prediction for each sample
+        weight_cdf = np.cumsum(self.estimator_weights_[sorted_idx], axis=1)
+        median_or_above = weight_cdf >= 0.5 * weight_cdf[:, -1][:, np.newaxis]
+        median_idx = median_or_above.argmax(axis=1)
+        
+        median_estimators = sorted_idx[np.arange(X.shape[0]), median_idx]
+        
+        # Return median predictions
+        return predictions[np.arange(X.shape[0]), median_estimators]
+        
+    def predict(self, X):
+        """Predict regression value for X.
+        The predicted regression value of an input sample is computed
+        as the weighted median prediction of the classifiers in the ensemble.
+        Parameters
+        ----------
+        X : {array-like, sparse matrix} of shape = [n_samples, n_features]
+        The training input samples. Sparse matrix can be CSC, CSR, COO,
+        DOK, or LIL. DOK and LIL are converted to CSR.
+        Returns
+        -------
+        y : array of shape = [n_samples]
+        The predicted regression values.
+        """
+        check_is_fitted(self, "estimator_weights_")
+        X = self._validate_X_predict(X)
+        
+        return self._get_median_predict(X, len(self.estimators_))
 
-            # Sort the predictions
-            sorted_idx = np.argsort(predictions, axis=1)
-
-            # Find index of median prediction for each sample
-            weight_cdf = stable_cumsum(self.estimator_weights_[sorted_idx], axis=1)
-            median_or_above = weight_cdf >= 0.5 * weight_cdf[:, -1][:, np.newaxis]
-            median_idx = median_or_above.argmax(axis=1)
-
-            median_estimators = sorted_idx[np.arange(X.shape[0]), median_idx]
-
-            # Return median predictions
-            return predictions[np.arange(X.shape[0]), median_estimators]
-
-        def predict(self, X):
-            """Predict regression value for X.
-            The predicted regression value of an input sample is computed
-            as the weighted median prediction of the classifiers in the ensemble.
-            Parameters
-            ----------
-            X : {array-like, sparse matrix} of shape = [n_samples, n_features]
-                The training input samples. Sparse matrix can be CSC, CSR, COO,
-                DOK, or LIL. DOK and LIL are converted to CSR.
-            Returns
-            -------
-            y : array of shape = [n_samples]
-                The predicted regression values.
-            """
-            check_is_fitted(self, "estimator_weights_")
-            X = self._validate_X_predict(X)
-
-            return self._get_median_predict(X, len(self.estimators_))
-
-        def staged_predict(self, X):
-            """Return staged predictions for X.
-            The predicted regression value of an input sample is computed
-            as the weighted median prediction of the classifiers in the ensemble.
-            This generator method yields the ensemble prediction after each
-            iteration of boosting and therefore allows monitoring, such as to
-            determine the prediction on a test set after each boost.
-            Parameters
-            ----------
-            X : {array-like, sparse matrix} of shape = [n_samples, n_features]
-                The training input samples. Sparse matrix can be CSC, CSR, COO,
-                DOK, or LIL. DOK and LIL are converted to CSR.
-            Returns
-            -------
-            y : generator of array, shape = [n_samples]
-                The predicted regression values.
-            """
-            check_is_fitted(self, "estimator_weights_")
-            X = self._validate_X_predict(X)
-
-            for i, _ in enumerate(self.estimators_, 1):
-                yield self._get_median_predict(X, limit=i)
+    def staged_predict(self, X):
+        """Return staged predictions for X.
+        The predicted regression value of an input sample is computed
+        as the weighted median prediction of the classifiers in the ensemble.
+        This generator method yields the ensemble prediction after each
+        iteration of boosting and therefore allows monitoring, such as to
+        determine the prediction on a test set after each boost.
+        Parameters
+        ----------
+        X : {array-like, sparse matrix} of shape = [n_samples, n_features]
+        The training input samples. Sparse matrix can be CSC, CSR, COO,
+        DOK, or LIL. DOK and LIL are converted to CSR.
+        Returns
+        -------
+        y : generator of array, shape = [n_samples]
+        The predicted regression values.
+        """
+        check_is_fitted(self, "estimator_weights_")
+        X = self._validate_X_predict(X)
+    
+        for i, _ in enumerate(self.estimators_, 1):
+            yield self._get_median_predict(X, limit=i)
+            
