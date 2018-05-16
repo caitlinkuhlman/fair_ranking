@@ -4,6 +4,7 @@ import pandas as pd
 import random
 import math
 from scipy import stats
+import matplotlib.pyplot as plt
 from sklearn import datasets
 #from sklearn.naive_bayes import GaussianNB
 #from sklearn.svm import LinearSVC
@@ -22,6 +23,13 @@ from sklearn.model_selection import ShuffleSplit
 from sklearn.datasets import make_regression
 from sklearn.isotonic import IsotonicRegression
 from sklearn.model_selection import KFold
+from sklearn.linear_model import LinearRegression, Lasso
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.ensemble import AdaBoostRegressor
+from sklearn.svm import SVR
+from sklearn.svm import LinearSVR
+from sklearn.linear_model import SGDClassifier
 
 #Error metrics
 
@@ -247,6 +255,35 @@ def generate(n_points, n_attr, n, r):
     scale(data, 'y')
     data.sort_values('y', inplace=True)
     return data
+    
+def normalize(df):
+    return(df - df.mean()) / df.std()
+
+def split_data_norm(data):
+    test = data.sample(frac=0.5, random_state=42)
+    test=normalize(test)
+    train_all = data.drop(test.index)
+    train_all=normalize(train_all)
+    tune = train_all.sample(frac=0.2, random_state=42)
+    train = train_all.drop(tune.index)
+    print("test ", test.shape)
+    print("train_all ",train_all.shape)
+    print("tune ",tune.shape)
+    print("train ",train.shape)
+    return np.nan_to_num(test), np.nan_to_num(train_all), np.nan_to_num(tune), np.nan_to_num(train)
+
+def split_data(data):
+    test = data.sample(frac=0.5, random_state=42)
+    train_all = data.drop(test.index)
+    #1,000
+    tune = train_all.sample(frac=0.2, random_state=42)
+    train = train_all.drop(tune.index)
+#     print("test ", test.shape)
+#     print("train_all ",train_all.shape)
+#     print("tune ",tune.shape)
+#     print("train ",train.shape)
+    return np.nan_to_num(test), np.nan_to_num(train_all), np.nan_to_num(tune), np.nan_to_num(train)
+
 
 def under_rank(data, sample, scale, group):
     
@@ -354,3 +391,350 @@ def train_test_short(df, folds, nbins, r):
     cv_errors.index = ['Mean Squared Error', 'Absolute Error', 'Overestimation','Underestimation', 'Spearman Rho', 'Kendall Tau', 'KL divergence']
 
     return cv_errors
+
+def stabalize_cv(df, folds, nbins):
+    df1 = cv_short(df, folds, nbins)
+    df2 = cv_short(df, folds, nbins)
+    df3 = cv_short(df, folds, nbins)
+    return (df1+df2+df3)/3
+
+#use 25% of the data for testing, and rest for calibration
+def cv_short(df, folds, nbins):
+    cv_errors =pd.DataFrame()
+    cv_errors["baseline"] = np.zeros(7)
+    cv_errors["calibrate"] = np.zeros(7)
+    cv_errors["cal_groups"] = np.zeros(7)
+    kf = KFold(n_splits=folds, shuffle=True)
+    
+    for train_index, test_index in kf.split(df):
+        train = df.iloc[train_index]
+        test = df.drop(train.index)
+
+        y_pred_baseline = test['y_pred']
+
+        y_pred_cal = get_calibrated_predictions(train, test)
+
+        y_pred0, y_pred1 = get_groupwise_calibrated_predictions(train, test)
+        y_pred_all = np.append(y_pred0, y_pred1)
+
+        y_test0 = test[test['g']==0.]['y']
+        y_test1 = test[test['g']==1.]['y']
+        y_test_all = np.append(y_test0, y_test1)
+
+        g_test0 = test[test['g']==0.]['g']
+        g_test1 = test[test['g']==1.]['g']
+        g_test_all = np.append(g_test0, g_test1)
+
+        y_test = np.array(test['y'])
+        g_test = np.array(test['g'])
+
+        b_errors = np.array(get_bin_errors(y_pred_baseline, y_test, g_test, nbins).mean())
+        cv_errors["baseline"] = cv_errors["baseline"] + b_errors
+        c_errors = np.array(get_bin_errors(y_pred_cal, y_test, g_test, nbins).mean())
+        cv_errors["calibrate"] = cv_errors["calibrate"] + c_errors
+        cg_errors = np.array(get_bin_errors(y_pred_all, y_test_all, g_test_all, nbins).mean())
+        cv_errors["cal_groups"] = cv_errors["cal_groups"] +cg_errors
+        cv_errors.index = ['Mean Squared Error', 'Absolute Error', 'Overestimation','Underestimation', 'Spearman Rho', 'Kendall Tau', 'KL divergence']
+
+    cv_errors=cv_errors / folds
+    cv_errors.index = ['Mean Squared Error', 'Absolute Error', 'Overestimation','Underestimation', 'Spearman Rho', 'Kendall Tau', 'KL divergence']
+
+    return cv_errors
+
+
+def run(data_g,data_y,data_X):
+    test_g, train_all_g, tune_g, train_g = split_data(data_g)
+    test_y, train_all_y, tune_y, train_y = split_data_norm(data_y)
+    test_X, train_all_X, tune_X, train_X = split_data_norm(data_X)
+    
+    lr = LinearRegression()
+    #linear regression
+    lr.fit(train_all_X, train_all_y)
+    lr_y_pred = lr.predict(test_X)
+    lr_err = mse(lr_y_pred, test_y)
+    print("linear regression mse: ", lr_err)
+    
+    df_lr=pd.DataFrame()
+    df_lr['y']=test_y
+    df_lr['y_pred']=lr_y_pred
+    df_lr['g']=test_g
+    
+    
+    #LASSO
+    errs=[]
+    depths = [0.1, 0.3,0.5,0.7,1]
+    for depth in depths:
+        kf = KFold(n_splits=5, shuffle=True, random_state=99)
+        mses =[]
+        for train_index, test_index in kf.split(tune_X):
+            la = Lasso(alpha=depth, fit_intercept=True, max_iter=1000, tol=0.0001)
+            la.fit(tune_X[train_index], tune_y[train_index])
+            la_y_pred = la.predict(tune_X[test_index])
+            mses.append(mse(la_y_pred, tune_y[test_index]))
+        errs.append(np.sum(mses))
+    best = np.argmin(errs)
+    print("best alpha: ", depths[best])
+    
+    la = Lasso(alpha=depths[best], fit_intercept=True, max_iter=1000, tol=0.0001)
+    la.fit(train_X[train_index], train_y[train_index])
+
+    la_y_pred = la.predict(test_X)
+    la_err = mse(la_y_pred, test_y)
+    print("lasso mse: ", la_err)
+    
+    df_la=pd.DataFrame()
+    df_la['y']=test_y
+    df_la['y_pred']=la_y_pred
+    df_la['g']=test_g
+    
+    #DECISON TREE
+    errs=[]
+    depths = [1,2,3,5,7,9]
+    for depth in depths:
+        kf = KFold(n_splits=5, shuffle=True, random_state=99)
+        mses =[]
+    
+        for train_index, test_index in kf.split(tune_X):
+            dt = DecisionTreeRegressor(max_depth=depth)
+            dt.fit(tune_X[train_index], tune_y[train_index])
+            y_pred = dt.predict(tune_X[test_index])
+            y = tune_y[test_index]
+            mses.append(mse(y_pred, tune_y[test_index]))
+        
+        errs.append(np.sum(mses))
+    best = np.argmin(errs)
+    print("best depth of tree: ", depths[best])
+    
+    dt = DecisionTreeRegressor(max_depth=depths[best])
+    dt.fit(train_X[train_index], train_y[train_index])
+
+    dt_y_pred = dt.predict(test_X)
+    dt_err = mse(dt_y_pred, test_y)
+    print("decision tree mse: ", dt_err)
+    
+    df_dt=pd.DataFrame()
+    df_dt['y']=test_y
+    df_dt['y_pred']=dt_y_pred
+    df_dt['g']=test_g
+    
+    
+    #RANDOM FOREST
+    errs=[]
+    depths = [1,2,3,5,7,9]
+    for depth in depths:
+        mses =[]
+        for train_index, test_index in kf.split(tune_X):
+            rf = RandomForestRegressor(max_depth=depth)
+            rf.fit(tune_X[train_index], tune_y[train_index])
+            y_pred = rf.predict(tune_X[test_index])
+            y = tune_y[test_index]
+            mses.append(mse(y_pred, tune_y[test_index]))
+        
+        errs.append(np.sum(mses)/len(mses))
+    best = np.argmin(errs)
+    print("best depth of tree: ", depths[best])
+    
+    rf = RandomForestRegressor(max_depth=depths[best])
+    rf.fit(train_X[train_index], train_y[train_index])
+
+    rf_y_pred = rf.predict(test_X)
+    rf_err = mse(rf_y_pred, test_y)
+    print("random forest mse: ", rf_err)
+
+    df_rf=pd.DataFrame()
+    df_rf['y']=test_y
+    df_rf['y_pred']=rf_y_pred
+    df_rf['g']=test_g
+    
+    #LINEAR SVM
+    errs=[]
+    depths = [0.0001, 0.001, 0.01, 0.1, 1, 10]
+    for depth in depths:
+        mses =[]
+        for train_index, test_index in kf.split(tune_X):
+            svr = LinearSVR(epsilon=0.0, tol=0.0001, loss= 'squared_epsilon_insensitive', C=depth, dual=False, max_iter=1000)
+            svr.fit(tune_X[train_index], tune_y[train_index])
+            y_pred = svr.predict(tune_X[test_index])
+            y = tune_y[test_index]
+            mses.append(mse(y_pred, tune_y[test_index]))
+            
+        errs.append(np.sum(mses)/len(mses))
+    best = np.argmin(errs)
+    print("Best C value: ", depths[best])
+    
+    svr = LinearSVR(epsilon=0.0, tol=0.0001, loss='squared_epsilon_insensitive', C=depths[best], dual=False, max_iter=1000) 
+    svr.fit(train_X[train_index], train_y[train_index])
+
+    svr_y_pred = svr.predict(test_X)
+    svr_err = mse(svr_y_pred, test_y)
+    print("linear svm: ", svr_err)
+    
+    df_svr=pd.DataFrame()
+    df_svr['y']=test_y
+    df_svr['y_pred']=svr_y_pred
+    df_svr['g']=test_g
+    
+    return df_la, df_dt, df_rf, df_svr
+
+#df = ['y_pred','y','g']
+def sliding_mse(df, window, step):
+    df.sort_values('y_pred', ascending=False, inplace=True)
+    err0=[]
+    err1=[]
+    start=0
+    end=window
+    while end<len(df):
+        vals = df.iloc[range(start,end)]
+        g0 = np.array(vals[vals['g']==0.][['y','y_pred']])
+        g1 = np.array(vals[vals['g']==1.][['y','y_pred']])
+        err0.append(get_mse(g0))
+        err1.append(get_mse(g1))
+        start+=step
+        end+=step
+    #get end of rank is needed
+    if(start > len(df)-window):
+        vals = df.iloc[range(len(df)-window,len(df))]
+        g0 = np.array(vals[vals['g']==0.][['y','y_pred']])
+        g1 = np.array(vals[vals['g']==1.][['y','y_pred']])
+        err0.append(get_mse(g0))
+        err1.append(get_mse(g1))
+    return err0, err1
+
+#df = ['y_pred','y','g']
+def sliding_ue(df, window, step):
+    df.sort_values('y_pred', ascending=False, inplace=True)
+    err0=[]
+    err1=[]
+    start=0
+    end=window
+    while end<len(df):
+        vals = df.iloc[range(start,end)]
+        g0 = np.array(vals[vals['g']==0.][['y','y_pred']])
+        g1 = np.array(vals[vals['g']==1.][['y','y_pred']])
+        err0.append(get_ue(g0))
+        err1.append(get_ue(g1))
+        start+=step
+        end+=step
+    #get end of rank is needed
+    if(start > len(df)-window):
+        vals = df.iloc[range(len(df)-window,len(df))]
+        g0 = np.array(vals[vals['g']==0.][['y','y_pred']])
+        g1 = np.array(vals[vals['g']==1.][['y','y_pred']])
+        err0.append(get_ue(g0))
+        err1.append(get_ue(g1))
+    return err0, err1
+
+
+#df = ['y_pred','y','g']
+def sliding_prob(df, window, step):
+    df.sort_values('y_pred', ascending=False, inplace=True)
+    prob0=[]
+    prob1=[]
+    start=0
+    end=window
+    g0=(df['g']==0.).sum()
+    g1=(df['g']==1.).sum()
+    while end<len(df):
+        vals = df.iloc[range(start,end)]
+        n0 = (vals['g']==0.).sum()
+        n1 = (vals['g']==1.).sum()
+        prob0.append(max(n0/(g0/window), 0.0001))
+        prob1.append(max(n1/(g1/window), 0.0001))
+        start+=step
+        end+=step
+    #get end of rank is needed
+    if(start > len(df)-window):
+        vals = df.iloc[range(len(df)-window,len(df))]
+        n0 = (vals['g']==0.).sum()
+        n1 = (vals['g']==1.).sum()
+        prob0.append(max(n0/(g0/window), 0.0001))
+        prob1.append(max(n1/(g1/window), 0.0001))
+    return prob0, prob1
+
+def get_kl_err(df, err, window=100, step=10):
+    err0,err1 = err(df, window, step)
+    return stats.entropy(err0, qk=err1)
+        
+def KL_eval(dfs, err):
+    errs =[]
+    for df in dfs:
+        errs.append(get_kl_err(df, err))
+    return errs 
+
+def get_spear_err(df, err, window=100, step=10):
+    err0,err1 = err(df, window, step)
+    #return stats.spearmanr(a,b)[0]
+    return np.cov(err0,err1)[0][1] / (np.std(err0)*np.std(err1))
+    
+def get_kendall_err(df, err, window=100, step=10):
+    err0,err1 = err(df, window, step)
+    return stats.kendalltau(err0,err1, nan_policy='raise')[0]
+
+def add_error(data, scale, group):
+    data2 = data.copy()
+    for i in range(len(data)):
+        if(data2.iloc[i]['g'] == group):
+            data2.iloc[i]['y'] = data2.iloc[i]['y']*(random.uniform(scale, 1.1))
+        else:
+            data2.iloc[i]['y'] = data2.iloc[i]['y']*(random.uniform(0.9, 1.1))
+    data2.sort_values('y', inplace=True)   
+
+def plot_rank(data, col):
+    cmap = plt.cm.rainbow
+    plt.rcParams['figure.figsize'] = (20, 4)
+    fig, ax = plt.subplots()
+    ax.bar(range(len(data)), data[col], 0.5, color=cmap((data['g'])))
+    ax.set_xlim([0,len(data)])
+    ax.set_title("", fontsize=16)
+    plt.show()    
+
+#df = ['y_pred','y','g']
+def sliding_oe(df, window, step):
+    df.sort_values('y_pred', ascending=False, inplace=True)
+    err0=[]
+    err1=[]
+    start=0
+    end=window
+    while end<len(df):
+        vals = df.iloc[range(start,end)]
+        g0 = np.array(vals[vals['g']==0.][['y','y_pred']])
+        g1 = np.array(vals[vals['g']==1.][['y','y_pred']])
+        err0.append(get_oe(g0))
+        err1.append(get_oe(g1))
+        start+=step
+        end+=step
+    #get end of rank is needed
+    if(start > len(df)-window):
+        vals = df.iloc[range(len(df)-window,len(df))]
+        g0 = np.array(vals[vals['g']==0.][['y','y_pred']])
+        g1 = np.array(vals[vals['g']==1.][['y','y_pred']])
+        err0.append(get_oe(g0))
+        err1.append(get_oe(g1))
+    return err0, err1
+
+def plot_errs(df, window, step):
+    plt.rcParams['figure.figsize'] = (6, 4)
+    
+    err0,err1 = sliding_prob(df, window, step)
+    plt.plot(err0, color='red')
+    plt.plot(err1, color='blue')
+    plt.title("Sliding Window Statistical Parity")
+    plt.show()
+
+    err0,err1 = sliding_mse(df, window, step)
+    plt.plot(err0, color='red')
+    plt.plot(err1, color='blue')
+    plt.title("Sliding Window MSE")
+    plt.show()
+
+    err0,err1 = sliding_oe(df, window, step)
+    plt.plot(err0, color='red')
+    plt.plot(err1, color='blue')
+    plt.title("Sliding Window Overestimation")
+    plt.show()
+
+    err0,err1 = sliding_ue(df, window, step)
+    plt.plot(err0, color='red')
+    plt.plot(err1, color='blue')
+    plt.title("Sliding Window Underestimation")
+    plt.show()
