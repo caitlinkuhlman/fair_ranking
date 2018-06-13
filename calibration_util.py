@@ -62,18 +62,18 @@ def mse(y_pred, y):
 
 #overestimate
 def get_oe(vals):
-    return np.sum([max(0,x[0]-x[1]) for x in vals])
+    return np.sum([max(0,x[1]-x[0]) for x in vals])
 
 def get_moe(vals):
-    m = np.sum([max(0,x[0]-x[1]) for x in vals])
+    m = np.sum([max(0,x[1]-x[0]) for x in vals])
     return m/len(vals)
 
 #underestimate
 def get_ue(vals):
-    return np.sum([min(0,x[0]-x[1]) for x in vals])
+    return np.sum([max(0,x[0]-x[1]) for x in vals])
 
 def get_mue(vals):
-    m = np.sum([min(0,x[0]-x[1]) for x in vals])
+    m = np.sum([max(0,x[0]-x[1]) for x in vals])
     return m/len(vals)
 
 def get_spear(vals):
@@ -601,6 +601,30 @@ def sliding_mse(df, window, step):
     return err0, err1
 
 #df = ['y_pred','y','g']
+def sliding_oe(df, window, step):
+    df.sort_values('y_pred', ascending=False, inplace=True)
+    err0=[]
+    err1=[]
+    start=0
+    end=window
+    while end<len(df):
+        vals = df.iloc[range(start,end)]
+        g0 = np.array(vals[vals['g']==0.][['y','y_pred']])
+        g1 = np.array(vals[vals['g']==1.][['y','y_pred']])
+        err0.append(get_oe(g0))
+        err1.append(get_oe(g1))
+        start+=step
+        end+=step
+    #get end of rank is needed
+    if(start > len(df)-window):
+        vals = df.iloc[range(len(df)-window,len(df))]
+        g0 = np.array(vals[vals['g']==0.][['y','y_pred']])
+        g1 = np.array(vals[vals['g']==1.][['y','y_pred']])
+        err0.append(get_oe(g0))
+        err1.append(get_oe(g1))
+    return err0, err1
+
+#df = ['y_pred','y','g']
 def sliding_ue(df, window, step):
     df.sort_values('y_pred', ascending=False, inplace=True)
     err0=[]
@@ -677,7 +701,9 @@ def add_error(data, scale, group):
             data2.iloc[i]['y'] = data2.iloc[i]['y']*(random.uniform(scale, 1.1))
         else:
             data2.iloc[i]['y'] = data2.iloc[i]['y']*(random.uniform(0.9, 1.1))
-    data2.sort_values('y', inplace=True)   
+    #data2.sort_values('y', inplace=True)   
+    return data2
+
 
 def plot_rank(data, col):
     cmap = plt.cm.rainbow
@@ -688,29 +714,6 @@ def plot_rank(data, col):
     ax.set_title("", fontsize=16)
     plt.show()    
 
-#df = ['y_pred','y','g']
-def sliding_oe(df, window, step):
-    df.sort_values('y_pred', ascending=False, inplace=True)
-    err0=[]
-    err1=[]
-    start=0
-    end=window
-    while end<len(df):
-        vals = df.iloc[range(start,end)]
-        g0 = np.array(vals[vals['g']==0.][['y','y_pred']])
-        g1 = np.array(vals[vals['g']==1.][['y','y_pred']])
-        err0.append(get_oe(g0))
-        err1.append(get_oe(g1))
-        start+=step
-        end+=step
-    #get end of rank is needed
-    if(start > len(df)-window):
-        vals = df.iloc[range(len(df)-window,len(df))]
-        g0 = np.array(vals[vals['g']==0.][['y','y_pred']])
-        g1 = np.array(vals[vals['g']==1.][['y','y_pred']])
-        err0.append(get_oe(g0))
-        err1.append(get_oe(g1))
-    return err0, err1
 
 def plot_errs(df, window, step):
     plt.rcParams['figure.figsize'] = (6, 4)
