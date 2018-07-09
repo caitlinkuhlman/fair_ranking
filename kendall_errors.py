@@ -282,19 +282,17 @@ def sliding_kendall_parity(df, window, step):
 def get_all_errs(df, err, window=100, step=10):
     err0,err1 = err(df, window, step)
     errs=[]
-    r0=stats.zscore(range(len(err0)))
-    r1=stats.zscore(range(len(err1)))
-    c0=stats.pearsonr(err0,r0)[0]
-    
-    c1=stats.pearsonr(err1,r1)[0]
-#     print(c0,np.std(r0),np.std(err0))
-    errs.append(c0 * (np.std(r0)/np.std(err0)))
-    errs.append(c1 * (np.std(r1)/np.std(err1)))
+    #trends
+    r0=[x/len(err0) for x in range(len(err0))]
+    r1=[x/len(err1) for x in range(len(err1))]
+    errs.append(stats.linregress(r0, y=err0)[0])
+    errs.append(stats.linregress(r1, y=err1)[0])
+    #correlation
     errs.append(stats.pearsonr(err0,err1)[0])
-#     errs.append(np.linalg.norm(np.array(err0) - np.array(err1)))
+    #distance
     diffs = np.abs(np.array(err0) - np.array(err1))
-    
     errs.append(np.sum(diffs) / len(err0))
+    #significance
     errs.append(stats.ttest_ind(err0,err1)[1])
     return errs
 
