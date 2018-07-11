@@ -252,6 +252,35 @@ def sliding_kendall_cal2(df, window, step):
 
 
 #normalized version
+# def sliding_kendall_parity(df, window, step):
+#     df.sort_values('y_pred', ascending=False, inplace=True)
+#     err0=[]
+#     err1=[]
+#     start=0
+#     end=window
+#     while end<len(df):
+#         vals = df.iloc[range(start,end)]
+#         g = np.array(vals[['y_pred', 'g']])
+#         p = pairs(len(g)) - pairs(len(vals[vals['g']==1])) - pairs(len(vals[vals['g']==0]))
+#         e0 = 0 if p == 0 else count_inversions(g, 0, len(g)-1, merge_parity_0)[1] / p
+#         err0.append(e0)
+#         e1 = 0 if p == 0 else count_inversions(g, 0, len(g)-1, merge_parity_1)[1] / p
+#         err1.append(e1)
+#         start+=step
+#         end+=step
+#     #get end of rank is needed
+#     if(start > len(df)-window):
+#         vals = df.iloc[range(len(df)-window,len(df))]
+#         g = np.array(vals[['y_pred', 'g']])
+#         p = pairs(len(g)) - pairs(len(vals[vals['g']==1])) - pairs(len(vals[vals['g']==0]))
+#         e0 = 0 if p == 0 else count_inversions(g, 0, len(g)-1, merge_parity_0)[1] / p
+#         err0.append(e0)
+#         e1 = 0 if p == 0 else count_inversions(g, 0, len(g)-1, merge_parity_1)[1] / p
+#         err1.append(e1)
+#     return err0, err1
+
+
+# normalized version
 def sliding_kendall_parity(df, window, step):
     df.sort_values('y_pred', ascending=False, inplace=True)
     err0=[]
@@ -263,9 +292,10 @@ def sliding_kendall_parity(df, window, step):
         g = np.array(vals[['y_pred', 'g']])
         p = pairs(len(g)) - pairs(len(vals[vals['g']==1])) - pairs(len(vals[vals['g']==0]))
         e0 = 0 if p == 0 else count_inversions(g, 0, len(g)-1, merge_parity_0)[1] / p
-        err0.append(e0)
         e1 = 0 if p == 0 else count_inversions(g, 0, len(g)-1, merge_parity_1)[1] / p
-        err1.append(e1)
+        if(e1 !=0 and e0 !=0):
+            err0.append(e0)
+            err1.append(e1)
         start+=step
         end+=step
     #get end of rank is needed
@@ -274,12 +304,13 @@ def sliding_kendall_parity(df, window, step):
         g = np.array(vals[['y_pred', 'g']])
         p = pairs(len(g)) - pairs(len(vals[vals['g']==1])) - pairs(len(vals[vals['g']==0]))
         e0 = 0 if p == 0 else count_inversions(g, 0, len(g)-1, merge_parity_0)[1] / p
-        err0.append(e0)
         e1 = 0 if p == 0 else count_inversions(g, 0, len(g)-1, merge_parity_1)[1] / p
-        err1.append(e1)
+        if(e1 !=0 and e0 !=0):
+            err0.append(e0)
+            err1.append(e1)
     return err0, err1
 
-def get_all_errs(df, err, window=100, step=10):
+def get_all_errs(df, err, window, step):
     err0,err1 = err(df, window, step)
     errs=[]
     #trends
@@ -288,30 +319,30 @@ def get_all_errs(df, err, window=100, step=10):
     errs.append(stats.linregress(r0, y=err0)[0])
     errs.append(stats.linregress(r1, y=err1)[0])
     #correlation
-    errs.append(stats.pearsonr(err0,err1)[0])
+    #errs.append(stats.pearsonr(err0,err1)[0])
     #distance
     diffs = np.abs(np.array(err0) - np.array(err1))
     errs.append(np.sum(diffs) / len(err0))
     #significance
-    errs.append(stats.ttest_ind(err0,err1)[1])
+    #errs.append(stats.ttest_ind(err0,err1)[1])
     return errs
 
 def norm(x):
     x = (x - np.mean(x))/np.std(x)
     
-def diagnose_k(df):
+def diagnose_k(df,w, s):
      
 #     dfs= run(data_g,data_y,data_X)
     
-    errs=pd.DataFrame(index=[['trend0','trend1','cor','dist','sig']])
+    errs=pd.DataFrame(index=[['trend0','trend1','dist']])
     #statistical parity
-    errs['parity'] = get_all_errs(df, sliding_kendall_parity, window=100, step=10)
+    errs['parity'] = get_all_errs(df, sliding_kendall_parity, w, s)
         
     #Calibration
-    errs['cal'] = get_all_errs(df, sliding_kendall_cal2, window=100, step=10)
+    errs['cal'] = get_all_errs(df, sliding_kendall_cal2, w, s)
         
     #Equalized Odds
-    errs['eq'] = get_all_errs(df, sliding_kendall_eq, window=100, step=10)
+    errs['eq'] = get_all_errs(df, sliding_kendall_eq, w, s)
         
     return errs
 
